@@ -15,47 +15,41 @@ const readline = require('node:readline');
 const rl1 = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  //prompt: 'OHAI> '
+  prompt: 'What next??> '
 });
 
-//rl.prompt();
-// rl1.on('line', (text) => {
-//     console.log('MENU');
-//     console.log('1 - sort word by abc');
-//     console.log('2 - sort word by abc');
-//     console.log('exit - to close program');
-//     rl1.question('Enter want you need - ', (answer) => {
-//         switch(answer.trim()){
-//             case '1':
-//                 let words = text.split(" ");
-//                 let sortedWords = words.sort()
-//                 console.log(sortedWords);
-//                 break;
-//             case 'exit':
-//                 console.log('exit!');
-//                 console.log('Have a great day!');
-//                 process.exit(0);
-//             default:
-//                 console.log(`Say what? I might have heard '${answer.trim()}'`);
-//                 break;
-//         }
-//       });
-//   rl1.prompt();
-// })
 
 rl1.question("Entre yout text \n", text => {
 
     console.log('MENU');
-    console.log('1 - sort word by abc');
-    console.log('2 - sort word by abc');
+    console.log('1 - sort words by abc');
+    console.log('2 - sort only numbers in text by abc');
+    console.log('3 - sort words by it lenght');
+
     console.log('exit - to close program');
     rl1.on('line', line => {
         switch(line.trim()){
+//     - Отсортировать слова по алфавиту
             case '1':
-                let words = text.split(" ");
-                let sortedWords = words.sort()
+                let sortedWords = text.split(" ").filter(e => !+e).sort();
                 console.log(sortedWords);
                 break;
+            case '2':
+//     - Отобразить числа от большего к меньшему
+                let numbers = text.split(" ").filter(e => +e).map(i => +i).sort(( a, b ) => b - a)
+                console.log(numbers);
+                rl1.prompt()
+                break;
+            case '3':
+//     - Отобразить слова в порядке возрастания по количеству букв в слове
+                let sortedByLengthWords = text.split(" ").filter(e => !+e).sort( (a, b) => a.length - b.length);
+                console.log(sortedByLengthWords);
+                break;
+            case '4': 
+//     - Показать только уникальные слова
+                let uniqueWords = new Set(text.split(" ").filter(e => !+e));
+                console.log(uniqueWords);
+                break
             case 'exit':
                 console.log('exit!');
                 console.log('Have a great day!');
