@@ -11,52 +11,82 @@
 //     - Для выхода из программы пользователю достаточно ввести `exit` в противном случае программа будет
 //       повторяться вновь и вновь, запрашивая новые данные и предлагая сортировку
 
-const readline = require('node:readline');
+const readline = require("node:readline");
 const rl1 = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  prompt: 'What next??> '
+  prompt: "What next??> ",
 });
 
+rl1.question("Entre yout text \n", (text) => {
+  console.log("MENU");
+  console.log("1 - sort words by abc");
+  console.log("2 - sort only numbers in text by abc");
+  console.log("3 - sort words by it lenght");
+  console.log("4 - show only unique words");
+  console.log("5 - show only unique");
+  console.log("menu - to show menu");
+  console.log("exit - to close program");
 
-rl1.question("Entre yout text \n", text => {
-
-    console.log('MENU');
-    console.log('1 - sort words by abc');
-    console.log('2 - sort only numbers in text by abc');
-    console.log('3 - sort words by it lenght');
-
-    console.log('exit - to close program');
-    rl1.on('line', line => {
-        switch(line.trim()){
-//     - Отсортировать слова по алфавиту
-            case '1':
-                let sortedWords = text.split(" ").filter(e => !+e).sort();
-                console.log(sortedWords);
-                break;
-            case '2':
-//     - Отобразить числа от большего к меньшему
-                let numbers = text.split(" ").filter(e => +e).map(i => +i).sort(( a, b ) => b - a)
-                console.log(numbers);
-                rl1.prompt()
-                break;
-            case '3':
-//     - Отобразить слова в порядке возрастания по количеству букв в слове
-                let sortedByLengthWords = text.split(" ").filter(e => !+e).sort( (a, b) => a.length - b.length);
-                console.log(sortedByLengthWords);
-                break;
-            case '4': 
-//     - Показать только уникальные слова
-                let uniqueWords = new Set(text.split(" ").filter(e => !+e));
-                console.log(uniqueWords);
-                break
-            case 'exit':
-                console.log('exit!');
-                console.log('Have a great day!');
-                process.exit(0);
-            default:
-                console.log(`Say what? I might have heard '${line.trim()}'`);
-                break;
-        }
-    })
-})
+  rl1.prompt();
+  rl1.on("line", (line) => {
+    switch (line.trim().toLowerCase()) {
+      case "menu":
+        console.log("MENU");
+        console.log("1 - sort words by abc");
+        console.log("2 - sort only numbers in text by abc");
+        console.log("3 - sort words by it lenght");
+        console.log("4 - show only unique words");
+        console.log("5 - show only unique");
+        console.log("exit - to close program");
+        break;
+      //     - Отсортировать слова по алфавиту
+      case "1":
+        let sortedWords = text
+          .split(" ")
+          .filter((e) => !+e)
+          .sort();
+        console.log(sortedWords.join(" "));
+        rl1.prompt();
+        break;
+      case "2":
+        //     - Отобразить числа от большего к меньшему
+        let numbers = text
+          .split(" ")
+          .filter((e) => +e)
+          .map((i) => +i)
+          .sort((a, b) => b - a);
+        console.log(numbers.join(" "));
+        rl1.prompt();
+        break;
+      case "3":
+        //     - Отобразить слова в порядке возрастания по количеству букв в слове
+        let sortedByLengthWords = text
+          .split(" ")
+          .filter((e) => !+e)
+          .sort((a, b) => a.length - b.length);
+        console.log(sortedByLengthWords.join(" "));
+        rl1.prompt();
+        break;
+      case "4":
+        //     - Показать только уникальные слова
+        let uniqueWords = new Set(text.split(" ").filter((e) => !+e));
+        console.log([...uniqueWords].join(" "));
+        rl1.prompt();
+        break;
+      case "5": 
+//     - Показать только уникальные значения из всего введённого пользователем набора слов и чисел.
+        let unique = new Set(text.split(" "));
+        console.log([...unique].join(" "));
+        rl1.prompt();
+        break;
+      case "exit":
+        console.log("exit!");
+        console.log("Have a great day!");
+        process.exit(0);
+      default:
+        console.log(`Say what? I might have heard '${line.trim()}'`);
+        break;
+    }
+  });
+});
