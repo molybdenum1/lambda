@@ -39,7 +39,7 @@ rl1.question("Entre yout text \n", (text) => {
         console.log("4 - show only unique words");
         console.log("5 - show only unique");
         console.log("exit - to close program");
-        break;
+        break;1
       //     - Отсортировать слова по алфавиту
       case "1":
         let sortedWords = text
@@ -74,8 +74,8 @@ rl1.question("Entre yout text \n", (text) => {
         console.log([...uniqueWords].join(" "));
         rl1.prompt();
         break;
-      case "5": 
-//     - Показать только уникальные значения из всего введённого пользователем набора слов и чисел.
+      case "5":
+        //     - Показать только уникальные значения из всего введённого пользователем набора слов и чисел.
         let unique = new Set(text.split(" "));
         console.log([...unique].join(" "));
         rl1.prompt();
