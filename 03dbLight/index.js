@@ -1,4 +1,5 @@
 import inquirer from 'inquirer';
+import fs from 'fs'
 // **Алгоритм работы приложения:**
 
 // - после запуска выводится сообщение с просьбой указать имя;
@@ -72,7 +73,10 @@ const collectInputs = async (inputs = []) => {
   
   const main = async () => {
     const inputs = await collectInputs();
-    console.log(inputs);
+    fs.appendFile('message.txt', JSON.stringify(inputs), function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+      });
   };
   
   main();
