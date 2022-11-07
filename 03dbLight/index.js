@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import fs from 'fs'
+import { lookup } from 'dns';
 // **Алгоритм работы приложения:**
 
 // - после запуска выводится сообщение с просьбой указать имя;
@@ -21,19 +22,6 @@ import fs from 'fs'
 //      наверняка вы получаете не одну ссылку в качестве релевантного результата.
 // - учтите вариант, что юзер может любит писать КАПСЛОКОМ, но все равно хочет получить валидные результаты
 
-// inquirer.registerPrompt("loop", require("inquirer-loop")(inquirer));
-// inquirer
-//   .prompt({
-//     type: "loop",
-//     name: "data",
-//     message: "Add one more?",
-//     questions: 
-//   }
-//   )
-//   .then((answers) => {
-//     console.log(answers);
-//   });
-
 const collectInputs = async (inputs = []) => {
     const prompts = [        
         {
@@ -42,7 +30,7 @@ const collectInputs = async (inputs = []) => {
             message: "What is your name?",
             validate: (ans) => {
                 if(ans == '') {
-                    return 'Please Enter a valid name';
+                    inquirer.ui.exit();
                 }
                 return true;
             }
@@ -70,13 +58,49 @@ const collectInputs = async (inputs = []) => {
     const newInputs = [...inputs, answers];
     return again ? collectInputs(newInputs) : newInputs;
   };
+
+  const searchInText= async () => {
+    const promptsInput = [        
+        {
+            type: "input",
+            name: "search",
+            message: "What is your name?",
+        },
+        
+    ];
+    const promptsConfirm = [
+        {
+            type: 'confirm',
+            name: 'again',
+            message: 'Try one more time? ',
+            default: true
+        }
+    ]
   
+    const {search} = await inquirer.prompt(promptsInput);
+    let arrToSearchIn = [];
+    let filedata = fs.readFileSync('message.txt', 'utf-8').split(/\r?\n/)
+    filedata.pop()
+    arrToSearchIn = filedata.map(i => JSON.parse(i))
+    let searchedUser = arrToSearchIn.filter(user => user.your_name === search || user.sex === search || user.age == search)
+    console.log(searchedUser);
+    const {again} = await inquirer.prompt(promptsConfirm);
+    
+    return again ? searchInText() : searchedUser;
+  };
+  
+
+
   const main = async () => {
     const inputs = await collectInputs();
-    fs.appendFile('message.txt', JSON.stringify(inputs), function (err) {
-        if (err) throw err;
-        console.log('Saved!');
-      });
+    //console.log(inputs);
+    inputs.map(input => {
+        fs.appendFile('message.txt', JSON.stringify(input) + '\n' , function (err) {
+            if (err) throw err;
+            console.log('Saved!');
+          });
+    })
+    searchInText()
   };
   
   main();
