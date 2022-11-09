@@ -1,8 +1,2 @@
-{"your_name":"kaki","sex":"Male","age":22}
-{"your_name":"luker","sex":"Male","age":22}
-{"your_name":"kuku","sex":"Female","age":222}
-{"your_name":"kike","sex":"Male","age":22}
-{"your_name":"kiku","sex":"Male","age":22}
-{"your_name":"kkk","sex":"Male","age":22}
-{"your_name":"luke","sex":"Male","age":22}
-{"your_name":"kony","sex":"Male","age":22}
+{"your_name":"dart","sex":"Male","age":12}
+{"your_name":"denis","sex":"Female","age":22}
