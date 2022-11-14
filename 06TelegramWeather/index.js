@@ -4,21 +4,12 @@ const axios = require('axios');
 const token = '5532231281:AAEausTueRpgXkBLF53B9e6NgfPn4xH9ia0';
 
 const bot = new TelegramBot(token, {polling: true});
+const apiLink = 'https://api.openweathermap.org/data/2.5/forecast?q=kharkiv&appid=9b4d258b0805206bc644291830b014ff';
 
-const options = {
-    method: 'GET',
-    url: 'https://open-weather13.p.rapidapi.com/city/kharkiv',
-    headers: {
-      'X-RapidAPI-Key': 'fa8727c597mshfeaf0e8d3ce5c50p1d73e7jsne00f0fa6b343',
-      'X-RapidAPI-Host': 'open-weather13.p.rapidapi.com'
-    }
-};
 
-axios.request(options).then(function (response) {
-    console.log(response.data);
-}).catch(function (error) {
-    console.error(error);
-});
+let getWeather = async() => {
+    
+}
 
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Welcome", {
@@ -28,13 +19,32 @@ bot.onText(/\/start/, (msg) => {
     });
 });
 
-bot.on('message', async (msg) => {
-    if (msg.text.toString().toLowerCase().indexOf('hi') === 0) {
-        bot.sendMessage(msg.chat.id,"Hello  " + msg.from.first_name);
-    } else if(msg.text.toString().toLowerCase().indexOf('weather') === 0){
-        
+bot.on('message', async(msg) => {
+    if (msg.text.toString().toLowerCase().indexOf('weather') === 0) {
+        let weather = await axios.get(apiLink).then((response) => response.data)
+        .catch(function (error) {
+            console.error(error);
+        });
+         console.log(parseWeatherToText(weather));
     } else {
         bot.sendMessage(msg.chat.id, msg.text);
         console.log('User send: ' + msg.text);
     }
 });
+
+function parseWeatherToText(weather) {
+    let msg = weather.city.name + ', ' + weather.city.country;
+    for (let i = 0; i < weather.list.filter(j => j % 5 === 0); i++) {
+        let days = weather.list; 
+        let date = new Date(days[i].dt  * 1000);
+
+        msg += '\n  ' + date.getDate()+ '.' + date.getMonth() + '.' + date.getFullYear()
+        msg += '\n\t' + 'Temperature: ' + +(days[i].main.temp / 274.15).toFixed(2) + '\n';
+        
+    }
+    return msg
+}
+
+function timeConverter(unix_date) {
+
+}
