@@ -25,7 +25,7 @@ bot.on('message', async(msg) => {
         .catch(function (error) {
             console.error(error);
         });
-         console.log(parseWeatherToText(weather));
+        bot.sendMessage(msg.chat.id,(parseWeatherToText(weather)));
     } else {
         bot.sendMessage(msg.chat.id, msg.text);
         console.log('User send: ' + msg.text);
@@ -34,17 +34,15 @@ bot.on('message', async(msg) => {
 
 function parseWeatherToText(weather) {
     let msg = weather.city.name + ', ' + weather.city.country;
-    for (let i = 0; i < weather.list.filter(j => j % 5 === 0); i++) {
+    for (let i = 0; i < weather.list.length; i++) {
         let days = weather.list; 
         let date = new Date(days[i].dt  * 1000);
 
-        msg += '\n  ' + date.getDate()+ '.' + date.getMonth() + '.' + date.getFullYear()
-        msg += '\n\t' + 'Temperature: ' + +(days[i].main.temp / 274.15).toFixed(2) + '\n';
-        
+        msg += '\n  ' + date.getDate()+ '.' + date.getMonth() + '.' + date.getFullYear() + ' ' + 
+        + date.getUTCHours() + ':00'
+        msg += '\n\t' + '*Temperatur*: ' + Math.floor(days[i].main.temp / 274.15) + ' °C';
+        msg += '\n\t' + '*Feels like* : ' + Math.floor(days[i].main.feels_like / 274.15) + ' °C';
+        msg += '\n\t' + days[i].weather[0].description + '\n'
     }
     return msg
-}
-
-function timeConverter(unix_date) {
-
 }
