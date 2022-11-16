@@ -1,38 +1,40 @@
-const fs = require('fs');
-const {google} = require('googleapis');
+const fs = require('fs')
+const { google } = require('googleapis')
 
-const GOOGLE_API_ID = '1nsrQ71wg3uWb6OWH607e0yozyKGMSwqk';
+const GOOGLE_API_FOLDER_ID = '1nsrQ71wg3uWb6OWH607e0yozyKGMSwqk'
 
-async function uploadFiles() {
-    try {
+async function uploadFile(){
+    try{
         const auth = new google.auth.GoogleAuth({
             keyFile: './drive-uploader.json',
-            scopes:  'https://www.googleapis.com/auth/drive'
+            scopes: ['https://www.googleapis.com/auth/drive']
         })
+
         const driveService = google.drive({
             version: 'v3',
             auth
         })
-        const fileMetadata = {
-            name: 'monkey.jpg',
-            parent: [GOOGLE_API_ID]
-        };
-        const media = {
-            mimeType: 'image/jpeg',
-            body: fs.createReadStream('monkey.jpg'),
-            
-        };
 
-        const file = await driveService.files.create({
-            resource: fileMetadata,
+        const fileMetaData = {
+            'name': 'monkey.jpg',
+            'parents': [GOOGLE_API_FOLDER_ID]
+        }
+
+        const media = {
+            mimeType: 'image/jpg',
+            body: fs.createReadStream('./monkey.jpg')
+        }
+
+        const response = await driveService.files.create({
+            resource: fileMetaData,
             media: media,
-            fields: 'id',
-        });
-        console.log('File Id:', file.data.id);
-        return file.data.id;
-    } catch (error) {
-        console.log('upload file error', error);
+            field: 'id'
+        })
+        return response.data.id
+
+    }catch(err){
+        console.log('Upload file error', err)
     }
 }
 
-uploadFiles().then(data => console.log(data))
+uploadFile().then(data => console.log(data))
