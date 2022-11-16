@@ -1,6 +1,5 @@
 import inquirer from "inquirer";
 import fs from "fs";
-import { lookup } from "dns";
 // **Алгоритм работы приложения:**
 
 // - после запуска выводится сообщение с просьбой указать имя;

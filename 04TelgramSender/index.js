@@ -10,18 +10,18 @@ const bot = new TelegramBot(token, { polling: true });
 bot.on("message", (msg) => {
   const chatId = msg.chat.id;
   if (msg.text.toString().toLowerCase().includes("bye")) {
-    bot.sendMessage(msg.chat.id, "Hope to see you around again , Bye");
+    bot.sendMessage(chatId, "Hope to see you around again , Bye");
   }
   if (msg.text.toString().toLowerCase().includes("hi")) {
-    bot.sendMessage(msg.chat.id, "хелоу");
+    bot.sendMessage(chatId, "хелоу");
   }
   if (msg.text.toString().toLowerCase().includes("hello")) {
-    bot.sendMessage(msg.chat.id, "хелоу");
+    bot.sendMessage(chatId, "хелоу");
   }
   if (msg.text.toString().toLowerCase().includes("hello")) {
     console.log(msg);
     bot.sendPhoto(
-      msg.chat.id,
+      chatId,
       "https://www.rbc.ua/static/img/t/o/tornado_01_650x410.jpg"
     );
   }
