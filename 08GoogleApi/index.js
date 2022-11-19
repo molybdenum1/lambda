@@ -4,7 +4,7 @@ import inquirer from "inquirer";
 
 const GOOGLE_API_FOLDER_ID = "1nsrQ71wg3uWb6OWH607e0yozyKGMSwqk";
 
-async function uploadFile() {
+async function uploadFile(path, name) {
   try {
     const auth = new google.auth.GoogleAuth({
       keyFile: "./drive-uploader.json",
@@ -17,13 +17,13 @@ async function uploadFile() {
     });
 
     const fileMetaData = {
-      name: "monkey.jpg",
+      name: name,
       parents: [GOOGLE_API_FOLDER_ID],
     };
 
     const media = {
       mimeType: "image/jpg",
-      body: fs.createReadStream("./monkey.jpg"),
+      body: fs.createReadStream(path),
     };
 
     const response = await driveService.files.create({
@@ -58,7 +58,8 @@ async function consoleUpload() {
   const { file_name } = await inquirer.prompt(prompts2);
 
   console.log(file_path + " " + file_name);
+  uploadFile(file_path, file_name).then(data => console.log(data));
 }
+//link shorterer
 
 consoleUpload();
-//uploadFile().then(data => console.log(data))
