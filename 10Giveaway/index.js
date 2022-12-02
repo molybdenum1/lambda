@@ -1,42 +1,63 @@
 const fs = require('fs');
 const sort = require('./sort.js');
-// import {} from './files/out0.txt'
+
 
 function uniqueValues() {
     try {
         const data = [];
         for(let i = 0; i <= 19; i++){
-            let str = fs.readFileSync(`./files/out${i}.txt`, {encoding: 'utf8'});
+            let str = fs.readFileSync(`./bigBoy/out${i}.txt`, {encoding: 'utf8'});
             data.push(...str.split('\n'))
         }
         // 
         let set = new Set(sort(data));
         // console.log(sort(data));
-        console.log(set);
+        console.log('Уникальных словосочетаний: ' + set.size);
         return set;
     } catch (error) {
         console.log(error);
     }
 }
 
-function existInAllFiles(arrayOfStrings) {
-    let arrOfExist = [];
-    for (let i = 0; i < arrayOfStrings.length; i++) {
-        let iterator = 0
-        for(let j = 0; j <= 19; i++){
-            let str = fs.readFileSync(`./files/out${j}.txt`, {encoding: 'utf8'});
-            if(str.includes(arrayOfStrings[i])){
-                iterator++
-            }
-        }
-        if(iterator === 20){
-            arrOfExist.push(arrayOfStrings[i])
-        }
-        
+function existInAllFiles() {
+    let data = [];
+    for (let i = 0; i < 20; i++) {
+        let str = fs.readFileSync(`./bigBoy/out${i}.txt`, {encoding: 'utf8'});
+        let set = new Set(str.split('\n'))
+        data.push(...set)
     }
-    console.log(arrOfExist);
+    let obj = {}
+    obj = data.reduce((cnt, cur) => (cnt[cur] = cnt[cur] + 1 || 1, cnt), {});
+    const newArr = []
+    for (const [key, value] of Object.entries(obj)) {
+        if( value == 20){
+            newArr.push(key)
+        }
+    }
+
+    console.log('Словосочетаний, которые есть во всех 20 файлах: ' + newArr.length);
+}
+function existInAtLeastTen() {
+    let data = [];
+    for (let i = 0; i < 20; i++) {
+        let str = fs.readFileSync(`./bigBoy/out${i}.txt`, {encoding: 'utf8'});
+        let set = new Set(str.split('\n'))
+        data.push(...set)
+    }
+    let obj = {}
+    obj = data.reduce((cnt, cur) => (cnt[cur] = cnt[cur] + 1 || 1, cnt), {});
+    const newArr = []
+    for (const [key, value] of Object.entries(obj)) {
+        if( value >= 10){
+            newArr.push(key)
+        }
+    }
+
+    console.log('Словосочетаний, которые есть, как минимум, в десяти файлах: ' + newArr.length);
 }
 
-
-let unique = uniqueValues();
-existInAllFiles(...unique);
+uniqueValues();
+existInAllFiles();
+existInAtLeastTen();
+// bigBoy
+// smallBoy
