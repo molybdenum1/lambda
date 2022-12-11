@@ -24,8 +24,8 @@ let rl = require('readline');
 // })
 // // ip.getIP()
 
-let data = fs.readFileSync('loc.CSV', 'utf-8');
-data = data.split('\r\n');
+// let data = fs.readFileSync('loc.CSV', 'utf-8');
+// data = data.split('\r\n');
 
 // console.log(data);
 
@@ -40,5 +40,10 @@ function getCountryfromIP (){
         }
     }
 }
+
+function int2ip (ipInt) {
+    return ( (ipInt>>>24) +'.' + (ipInt>>16 & 255) +'.' + (ipInt>>8 & 255) +'.' + (ipInt & 255) );
+}
+console.log(int2ip(16875519));
 //45.232.208.143
-console.log(getCountryfromIP())
+// console.log(getCountryfromIP())
