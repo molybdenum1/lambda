@@ -1,8 +1,6 @@
 // let express = require('express');
 // const ip  = require('./getIp/index');
-let fs = require('fs');
-let rl = require('readline');
-
+import getCountryfromIP from "./getCountry/getCountry.js";
 // let app = express();
 
 // app.get('/', (req, res) => {
@@ -24,26 +22,19 @@ let rl = require('readline');
 // })
 // // ip.getIP()
 
-// let data = fs.readFileSync('loc.CSV', 'utf-8');
-// data = data.split('\r\n');
 
 // console.log(data);
 
-function getCountryfromIP (){
-    let ip = '18518212034'
-    // let searcherIP = ip.split('.').join('')
-    for (let i in data) { 
-        let [from, to, countryIndex, country] = data[i].split(",");
-        // console.log(from);
-        if(ip > from.replace(/(^\"+|\"+$)/g, '') && ip < to.replace(/(^\"+|\"+$)/g, '')){
-            return `${countryIndex}, ${country}`
-        }
-    }
-}
 
-function int2ip (ipInt) {
-    return ( (ipInt>>>24) +'.' + (ipInt>>16 & 255) +'.' + (ipInt>>8 & 255) +'.' + (ipInt & 255) );
-}
-console.log(int2ip(16875519));
-//45.232.208.143
-// console.log(getCountryfromIP())
+console.log(getCountryfromIP('77.83.248.211'));//romania
+console.log(getCountryfromIP('45.234.156.1'));//chile
+console.log(getCountryfromIP('23.43.23.15'));//uk
+console.log(getCountryfromIP('185.182.120.34')); //Armenia
+console.log(getCountryfromIP('45.177.176.23')); //Mexico 
+console.log(getCountryfromIP('5.44.80.51')); //Turkey
+console.log(getCountryfromIP('91.149.48.22')); //Norway
+console.log(getCountryfromIP('83.229.33.3')); //Spain
+console.log(getCountryfromIP('203.24.108.65')); //Cyprus
+console.log(getCountryfromIP('89.28.176.5')); //Ireland
+console.log(getCountryfromIP('91.193.172.165')); //
+
