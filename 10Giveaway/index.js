@@ -19,19 +19,23 @@ function uniqueValues() {
 }
 
 function existInAllFiles() {
-  let data = [];
-  for (let i = 0; i < 20; i++) {
-    let str = fs.readFileSync(`./bigBoy/out${i}.txt`, { encoding: "utf8" });
-    let set = new Set(str.split("\n"));
-    data.push(...set);
-  }
-  let obj = {};
-  obj = data.reduce((cnt, cur) => ((cnt[cur] = cnt[cur] + 1 || 1), cnt), {});
-  const newArr = [];
-  for (const [key, value] of Object.entries(obj)) {
-    if (value == 20) {
-      newArr.push(key);
+  try {
+    let data = [];
+    for (let i = 0; i < 20; i++) {
+      let str = fs.readFileSync(`./bigBoy/out${i}.txt`, { encoding: "utf8" });
+      let set = new Set(str.split("\n"));
+      data.push(...set);
     }
+    let obj = {};
+    obj = data.reduce((cnt, cur) => ((cnt[cur] = cnt[cur] + 1 || 1), cnt), {});
+    const newArr = [];
+    for (const [key, value] of Object.entries(obj)) {
+      if (value == 20) {
+        newArr.push(key);
+      }
+    }
+  } catch (error) {
+    console.log(error);
   }
 
   console.log(
@@ -39,25 +43,29 @@ function existInAllFiles() {
   );
 }
 function existInAtLeastTen() {
-  let data = [];
-  for (let i = 0; i < 20; i++) {
-    let str = fs.readFileSync(`./bigBoy/out${i}.txt`, { encoding: "utf8" });
-    let set = new Set(str.split("\n"));
-    data.push(...set);
-  }
-  let obj = {};
-  obj = data.reduce((cnt, cur) => ((cnt[cur] = cnt[cur] + 1 || 1), cnt), {});
-  const newArr = [];
-  for (const [key, value] of Object.entries(obj)) {
-    if (value >= 10) {
-      newArr.push(key);
+  try {
+    let data = [];
+    for (let i = 0; i < 20; i++) {
+      let str = fs.readFileSync(`./bigBoy/out${i}.txt`, { encoding: "utf8" });
+      let set = new Set(str.split("\n"));
+      data.push(...set);
     }
-  }
+    let obj = {};
+    obj = data.reduce((cnt, cur) => ((cnt[cur] = cnt[cur] + 1 || 1), cnt), {});
+    const newArr = [];
+    for (const [key, value] of Object.entries(obj)) {
+      if (value >= 10) {
+        newArr.push(key);
+      }
+    }
 
-  console.log(
-    "Словосочетаний, которые есть, как минимум, в десяти файлах: " +
-      newArr.length
-  );
+    console.log(
+      "Словосочетаний, которые есть, как минимум, в десяти файлах: " +
+        newArr.length
+    );
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 uniqueValues();
