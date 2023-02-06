@@ -35,6 +35,24 @@ function checkDocumentType(documentType) {
 }
 
 function calculateDeadline(symbolNumbers, documentType, lang) {
+  let orderTime = Math.floor(new Date() / 1000);
+  let timeForWork =
+    calculateTimeForWork(symbolNumbers, documentType, lang) * 60;
+  let date = new Date((timeForWork + orderTime) * 1000);
+
+  return (
+    date.getDate() +
+    "." +
+    (+date.getMonth() + 1) +
+    "." +
+    date.getFullYear() +
+    " " +
+    date.getUTCHours() +
+    ":00"
+  );
+}
+
+function calculateTimeForWork(symbolNumbers, documentType, lang) {
   const CyrillicSympolsPerHour = 1333;
   const LatinSympolsPerHour = 333;
   const minTime = 60;
@@ -49,10 +67,11 @@ function calculateDeadline(symbolNumbers, documentType, lang) {
         ? timeToDoWork + timeToDoWork * 0.2
         : timeToDoWork;
     }
+    return minTime;
   }
   if (lang === "rus" || lang === "ukr") {
     timeToDoWork =
-      timeToDoWork +  symbolNumbers / Math.floor(CyrillicSympolsPerHour / 60);
+      timeToDoWork + symbolNumbers / Math.floor(CyrillicSympolsPerHour / 60);
     if (timeToDoWork > minTime) {
       return !checkDocumentType(documentType)
         ? timeToDoWork + timeToDoWork * 0.2
@@ -60,23 +79,16 @@ function calculateDeadline(symbolNumbers, documentType, lang) {
     }
     return minTime;
   }
-  return !checkDocumentType(documentType)
-        ? minTime + minTime * 0.2
-        : minTime;
+  return !checkDocumentType(documentType) ? minTime + minTime * 0.2 : minTime;
 }
-
-console.log(calculatePrice(3000, ".doc", "eng"));
-// console.log(calculatePrice(3000, ".pdf", "eng"));
-// console.log(calculatePrice(3000, ".pdf", "ukr"));
-
-console.log(calculateDeadline(3000, ".doc", "eng"));
-
 
 function correctarium(symbolNumbers, documentType, lang) {
+  // console.log(calculatePrice(symbolNumbers, documentType, lang),'uah');
+  // console.log(calculateDeadline(symbolNumbers, documentType, lang), 'min');
+  let price = calculatePrice(symbolNumbers, documentType, lang);
+  let deadLine = calculateDeadline(symbolNumbers, documentType, lang);
 
-    console.log(calculatePrice(symbolNumbers, documentType, lang));
-    console.log(calculateDeadline(symbolNumbers, documentType, lang));
-
+  return { price, deadLine };
 }
 
-correctarium(3000, ".doc", "eng");
+console.log(correctarium(5000, ".doc", "eng"));
