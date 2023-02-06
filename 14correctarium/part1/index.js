@@ -41,9 +41,10 @@ function calculateDeadline(symbolNumbers, documentType, lang) {
   let date = new Date((timeForWork + orderTime) * 1000);
 
   return (
-    date.getDate() +
+    +date.getMonth() +
+    1 +
     "." +
-    (+date.getMonth() + 1) +
+    date.getDate() +
     "." +
     date.getFullYear() +
     " " +
@@ -82,12 +83,45 @@ function calculateTimeForWork(symbolNumbers, documentType, lang) {
   return !checkDocumentType(documentType) ? minTime + minTime * 0.2 : minTime;
 }
 
+function workingDays(dateTime) {
+  let [date, time] = dateTime.split(" ");
+  let [mm, da, yy] = date.split(".");
+
+  let dd = new Date(dateTime).getDay();
+  if (dd === 6) {
+    da = +da + 2;
+    date = [mm, da, yy].join(".");
+    time = "11:00";
+    console.log(date);
+  }
+  if (dd === 0) {
+    da = +da + 1;
+    date = [mm, da, yy].join(".");
+    time = "11:00";
+    console.log(date);
+  }
+  let [hh, min] = time.split(":");
+  if (+hh >= 19) {
+    da = +da + 1;
+    date = [mm, da, yy].join(".");
+    time = "11:00";
+  }
+  if (+hh <= 10) {
+    time = "11:00";
+  }
+
+  return date + " " + time;
+}
+// console.log(workingDays("2.6.2023 4:00"));
+
+function isWorkingDay() {}
+
 function correctarium(symbolNumbers, documentType, lang) {
   // console.log(calculatePrice(symbolNumbers, documentType, lang),'uah');
   // console.log(calculateDeadline(symbolNumbers, documentType, lang), 'min');
   let price = calculatePrice(symbolNumbers, documentType, lang);
   let deadLine = calculateDeadline(symbolNumbers, documentType, lang);
-
+  deadLine = (workingDays(deadLine));
   return { price, deadLine };
 }
 
