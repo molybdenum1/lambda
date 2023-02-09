@@ -36,17 +36,21 @@ function checkDocumentType(documentType) {
 
 function calculateDeadline(symbolNumbers, documentType, lang) {
   let orderTime = new Date();
-  let timeForWork =
-    Math.ceil(calculateTimeForWork(symbolNumbers, documentType, lang) / 60);
+  let timeForWork = Math.ceil(
+    calculateTimeForWork(symbolNumbers, documentType, lang) / 60
+  );
   // console.log(timeForWork);
-  let deadLine = workingDays((+orderTime.getMonth() +
-  1 +
-  "." +
-  orderTime.getDate() +
-  "." +
-  orderTime.getFullYear() +
-  " " +
-  orderTime.getUTCHours()), timeForWork)
+  let deadLine = workingDays(
+    +orderTime.getMonth() +
+      1 +
+      "." +
+      orderTime.getDate() +
+      "." +
+      orderTime.getFullYear() +
+      " " +
+      orderTime.getUTCHours(),
+    timeForWork
+  );
 
   // let date = new Date((timeForWork + orderTime) * 1000);
   // console.log(deadLine);
@@ -97,9 +101,9 @@ function workingDays(orderTime, timeForExec) {
   if (dd === 0) {
     da = +da + 1;
     date = [mm, da, yy].join(".");
-    time = 10
+    time = 10;
   }
-  
+
   if (+time >= 19) {
     da = +da + 1;
     date = [mm, da, yy].join(".");
@@ -109,31 +113,42 @@ function workingDays(orderTime, timeForExec) {
   if (+time <= 10) {
     time = 10;
   }
-  while(timeForExec > 0) {
-    // console.log(timeForExec);
-    if ((time + timeForExec) >= 19){
-      timeForExec = timeForExec - (19 - time)
+  while (timeForExec > 0) {
+    let d = new Date(date).getDay();
+    if(d == 0){
       da = +da + 1;
       date = [mm, da, yy].join(".");
       time = 10;
-    }else {
-      time += timeForExec
-      timeForExec = 0
     }
-    
+    if(d === 6) {
+      da = +da + 2;
+      date = [mm, da, yy].join(".");
+      time = 10;
+      // console.log(date);
+    }
+    if (time + timeForExec >= 19) {
+      timeForExec = timeForExec - (19 - time);
+      da = +da + 1;
+      date = [mm, da, yy].join(".");
+      time = 10;
+    } else {
+      time += timeForExec;
+      timeForExec = 0;
+    }
+    console.log(date, time);
   }
 
   return date + " " + time + ":00";
 }
-// console.log(workingDays('2.6.2023 22', 30));
-
-
-export function correctarium(symbolNumbers, documentType, lang) {
+console.log(workingDays('2.9.2023 15', 100));
+function correctarium(symbolNumbers, documentType, lang) {
   let price = calculatePrice(symbolNumbers, documentType, lang);
   let deadLine = calculateDeadline(symbolNumbers, documentType, lang);
-  deadLine = (workingDays(deadLine));
+  deadLine = workingDays(deadLine);
   return { price, deadLine };
 }
 
-// console.log(correctarium(10000, ".doc", "eng"));
+module.exports = { correctarium } 
+
+// console.log(correctarium(5000, ".doc", "ukr"));
 // console.log(Math.ceil(calculateTimeForWork(3000, ".doc", "eng")/60));
