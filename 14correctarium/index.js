@@ -1,5 +1,3 @@
-// import express from "express";
-// import { correctarium } from "./part1/index.js";
 const express = require("express");
 const { correctarium } = require("./part1/index")
 
@@ -10,8 +8,8 @@ app.use(express.json());
 
 app.post("/", (req, res) => {
   let { symbolNumbers, documentType, lang } = req.body;
-  let a = correctarium(symbolNumbers, documentType, lang);
-  res.status(400).send(a);
+  let data = correctarium(symbolNumbers, documentType, lang);
+  res.status(400).send(data);
 });
 
 app.listen(PORT, () => {

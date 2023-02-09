@@ -87,44 +87,31 @@ function calculateTimeForWork(symbolNumbers, documentType, lang) {
   return !checkDocumentType(documentType) ? minTime + minTime * 0.2 : minTime;
 }
 
-function workingDays(orderTime, timeForExec) {
+function checkWorkingDays(orderTime, timeForExec) {
   let [date, time] = orderTime.split(" ");
   let [mm, da, yy] = date.split(".");
 
-  let dd = new Date(date).getDay();
-  if (dd === 6) {
-    da = +da + 2;
-    date = [mm, da, yy].join(".");
-    time = 10;
-    console.log(date);
-  }
-  if (dd === 0) {
-    da = +da + 1;
-    date = [mm, da, yy].join(".");
-    time = 10;
-  }
-
-  if (+time >= 19) {
-    da = +da + 1;
-    date = [mm, da, yy].join(".");
-    time = 10;
-    // console.log(date, time);
-  }
-  if (+time <= 10) {
-    time = 10;
-  }
   while (timeForExec > 0) {
-    let d = new Date(date).getDay();
-    if(d == 0){
+    let newDay = new Date(date).getDay();
+    if(newDay == 0){
       da = +da + 1;
       date = [mm, da, yy].join(".");
       time = 10;
     }
-    if(d === 6) {
+    if(newDay === 6) {
       da = +da + 2;
       date = [mm, da, yy].join(".");
       time = 10;
       // console.log(date);
+    }
+    if (+time >= 19) {
+      da = +da + 1;
+      date = [mm, da, yy].join(".");
+      time = 10;
+      // console.log(date, time);
+    }
+    if (+time <= 10) {
+      time = 10;
     }
     if (time + timeForExec >= 19) {
       timeForExec = timeForExec - (19 - time);
@@ -135,20 +122,19 @@ function workingDays(orderTime, timeForExec) {
       time += timeForExec;
       timeForExec = 0;
     }
-    console.log(date, time);
   }
 
   return date + " " + time + ":00";
 }
-console.log(workingDays('2.9.2023 15', 100));
+// console.log(checkWorkingDays('2.9.2023 15', 100));
+
 function correctarium(symbolNumbers, documentType, lang) {
   let price = calculatePrice(symbolNumbers, documentType, lang);
   let deadLine = calculateDeadline(symbolNumbers, documentType, lang);
-  deadLine = workingDays(deadLine);
+  deadLine = checkWorkingDays(deadLine);
   return { price, deadLine };
 }
 
 module.exports = { correctarium } 
 
-// console.log(correctarium(5000, ".doc", "ukr"));
-// console.log(Math.ceil(calculateTimeForWork(3000, ".doc", "eng")/60));
+console.log(correctarium(60000, ".doc", "ukr"));

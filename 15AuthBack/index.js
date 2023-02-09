@@ -1,24 +1,10 @@
 const express = require('express');
 const mongo = require('mongodb');
-const db = require('./db/db')
 
 const PORT = 5000;
+const url = `mongodb+srv://molybden:MoWagner@cluster0.dwv8iyf.mongodb.net/?retryWrites=true&w=majority`;
 
 const app = express();
-app.get('/', async(req, res) => {
-    await db.db.collection('users').find({}).toArray(function(err, result){
-        if(err){
-            res.status(400).send('error fetching')
-        }else {
-            res.json(result)
-        }
-    })
-} );
-
-
-db.connect()
-
-
 
 app.listen(PORT, async () => {
     
