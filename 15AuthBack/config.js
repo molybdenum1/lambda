@@ -3,5 +3,6 @@ module.exports = {
     DB_USERNAME: "molybden",
     DB_PASSWORD: "MoWagner",
     secret: "SECKRET_KEEY",
+    refreshSecret: "REFRESH_SECKRET_KEY"    
   };
   

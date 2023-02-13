@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { secret } = require("../config.js");
+const { secret, refreshSecret } = require("../config.js");
 
 const generateAccessToken = (id) => {
   const payload = {
@@ -7,4 +7,10 @@ const generateAccessToken = (id) => {
   };
   return jwt.sign(payload, secret, { expiresIn: "12h" });
 };
-module.exports = { generateAccessToken };
+const generateRefreshToken = (id) => {
+  const payload = {
+    id,
+  };
+  return jwt.sign(payload, refreshSecret, { expiresIn: "12h" });
+};
+module.exports = { generateAccessToken, generateRefreshToken };
