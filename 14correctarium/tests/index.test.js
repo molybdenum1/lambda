@@ -1,4 +1,4 @@
-const { correctarium } = require("../part1/index");
+const { correctarium } = require("../correctarium/index");
 
 test("3k sings, type: doc, lang: eng   ", () => {
   expect(correctarium(3000, ".doc", "eng")).toStrictEqual({

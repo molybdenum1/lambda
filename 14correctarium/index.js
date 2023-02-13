@@ -1,5 +1,5 @@
 const express = require("express");
-const { correctarium } = require("./part1/index")
+const { correctarium } = require("./correctarium/index")
 
 const PORT = 5000;
 
