@@ -1,7 +1,7 @@
 import express, {Application} from 'express';
 
 const app: Application = express();
-const PORT: Number = 5050;
+const PORT = 5050;
 
 
 app.listen(PORT, () => {
