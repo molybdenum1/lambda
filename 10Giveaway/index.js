@@ -1,5 +1,4 @@
 const fs = require("fs");
-const sort = require("./sort.js");
 
 function uniqueValues() {
   try {
@@ -9,14 +8,14 @@ function uniqueValues() {
       data.push(...str.split("\n"));
     }
     //
-    let set = new Set(sort(data));
-    // console.log(sort(data));
+    let set = new Set(data);
     console.log("Уникальных словосочетаний: " + set.size);
     return set;
   } catch (error) {
     console.log(error);
   }
 }
+
 
 function existInAllFiles() {
   try {
@@ -34,13 +33,12 @@ function existInAllFiles() {
         newArr.push(key);
       }
     }
+    console.log(
+      "Словосочетаний, которые есть во всех 20 файлах: " + newArr.length
+    );
   } catch (error) {
     console.log(error);
   }
-
-  console.log(
-    "Словосочетаний, которые есть во всех 20 файлах: " + newArr.length
-  );
 }
 function existInAtLeastTen() {
   try {
