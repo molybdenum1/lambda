@@ -2,7 +2,7 @@
 export const apiLinks: iApiLink[] = [
   {
     name: "coinpaprika",
-    link: "https://api.coinpaprika.com/v1/coins",
+    link: "https://api.coinpaprika.com/v1/tickers",
   },
   {
     name: "cucoin",
