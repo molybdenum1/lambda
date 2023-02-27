@@ -1,7 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import { apiLinks } from "./data/links";
-import { conn } from "./db";
-import { insertCoinPaprikaCryptoInDB, insertCoinStatsCryptoInDB } from "./insertCryptoInDB";
+import { conn, DropTableData, insertData } from "./db";
 
 const app: Application = express();
 const PORT = 5050;
@@ -15,11 +14,14 @@ app.get("/insertCryptoData", async (req: Request, res: Response) => {
 });
 
 app.listen(PORT, async () => {
+  console.log(`Server is running on localhost://${PORT}`);
   conn.connect((err) => {
     if (err) throw err;
     console.log("db connected");
   });
-//   insertCoinStatsCryptoInDB();
-//   insertCoinPaprikaCryptoInDB();
-  console.log(`Server is running on localhost://${PORT}`);
+  insertData();
+  setInterval(
+    insertData
+  , 300000)
+  
 });

@@ -1,14 +1,22 @@
 
 export const apiLinks: iApiLink[] = [
   {
+    //+
     name: "coinpaprika",
     link: "https://api.coinpaprika.com/v1/tickers",
   },
   {
-    name: "cucoin",
-    link: "https://api.kucoin.com/api/v1/currencies/",
+    //+
+    name: "coinmarketcap",
+    link: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest",
+    headers: 'e320c0a3-b5e4-4a99-8fac-750034ab5716'
   },
   {
+    name: "cucoin",
+    link: "https://api.kucoin.com/api/v1/market/allTickers",
+  },
+  {
+    //+
     name: "coinstats",
     link: "https://api.coinstats.app/public/v1/coins",
   },
@@ -18,7 +26,8 @@ export const apiLinks: iApiLink[] = [
   },
 ];
 
-interface iApiLink {
+export interface iApiLink {
     name: string,
-    link: string
+    link: string,
+    headers? : string
 }
