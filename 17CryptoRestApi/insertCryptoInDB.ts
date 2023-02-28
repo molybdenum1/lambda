@@ -18,7 +18,7 @@ export const insertCoinStatsCryptoInDB = async() => {
         ${index.priceChange1d}, 
         ${index.priceChange1w}  
        )`;
-       conn.query(sql, function (err, result) {
+       conn.query(sql, function (err) {
         if (err) throw err;
       });
     }
@@ -39,7 +39,7 @@ export const insertCoinPaprikaCryptoInDB = async() => {
         ${index.quotes.USD.percent_change_24h}, 
         ${index.quotes.USD.percent_change_7d}  
        )`;
-       conn.query(sql, function (err, result) {
+       conn.query(sql, function (err) {
         if (err) throw err;
       });
     }
@@ -54,13 +54,13 @@ export const insertCuCryptoInDB = async() => {
       "${index.symbol}", 
       "${index.symbolName}", 
       "cucoin", 
-      "${index.symbol}", 
-      ${index.buy}, 
-      ${index.last},
+      "${index.symbol} ", 
+      ${index.buy || 0}, 
+      ${index.last || 0},
       ${index.low}, 
       ${index.high}  
      )`;
-     conn.query(sql, function (err, result) {
+     conn.query(sql, function (err) {
       if (err) throw err;
       
     });
@@ -83,7 +83,7 @@ export const insertCoinMarketCryptoInDB = async() => {
       ${index.quote.USD.percent_change_24h}, 
       ${index.quote.USD.percent_change_7d}  
      )`;
-     conn.query(sql, function (err, result) {
+     conn.query(sql, function (err) {
       if (err) throw err;
       
     });

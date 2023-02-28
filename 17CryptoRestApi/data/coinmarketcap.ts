@@ -1,10 +1,10 @@
 export interface Status {
   timestamp: Date;
   error_code: number;
-  error_message?: any;
+  error_message?: unknown;
   elapsed: number;
   credit_count: number;
-  notice?: any;
+  notice?: unknown;
   total_count: number;
 }
 
@@ -21,7 +21,7 @@ export interface USD {
   market_cap: number;
   market_cap_dominance: number;
   fully_diluted_market_cap: number;
-  tvl?: any;
+  tvl?: unknown;
   last_updated: Date;
 }
 
@@ -40,11 +40,11 @@ export interface Datum {
   max_supply: number;
   circulating_supply: number;
   total_supply: number;
-  platform?: any;
+  platform?: unknown;
   cmc_rank: number;
-  self_reported_circulating_supply?: any;
-  self_reported_market_cap?: any;
-  tvl_ratio?: any;
+  self_reported_circulating_supply?: unknown;
+  self_reported_market_cap?: unknown;
+  tvl_ratio?: unknown;
   last_updated: Date;
   quote: Quote;
 }
