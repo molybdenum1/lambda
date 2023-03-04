@@ -3,12 +3,14 @@ import { CoinPaprikaObject } from './data/coinpaprika';
 import { CoinStatsObject } from './data/coinstats';
 import { CucoinObject } from './data/cucoin';
 import { conn } from './db';
-import { getCrypto } from './getCrypto';
+import CryptoService from './service/crypto.service';
+
+const cryptoService = new CryptoService();
 
 export const insertCoinStatsCryptoInDB = async() => {
-    const data: CoinStatsObject = await getCrypto('', '', 'coinstats').then(res => res)
+    const data: CoinStatsObject = await cryptoService.getCrypto('', '', 'coinstats').then(res => res)
     for(const index of data.coins ){
-       const sql = `INSERT INTO crypto.crypta (code, name, exchange, symbol, price, priceChange1h, priceChange1d, priceChange1w ) VALUES (
+       const sql = `INSERT INTO crypta (code, name, exchange, symbol, price, priceChange1h, priceChange1d, priceChange1w ) VALUES (
         "${index.id}", 
         "${index.name}", 
         "coinstats", 
@@ -25,11 +27,11 @@ export const insertCoinStatsCryptoInDB = async() => {
     console.log("CoinStats here");
 }
 export const insertCoinPaprikaCryptoInDB = async() => {
-    const data: CoinPaprikaObject[] = await getCrypto('', '', 'coinpaprika').then(res => res)
+    const data: CoinPaprikaObject[] = await cryptoService.getCrypto('', '', 'coinpaprika').then(res => res)
     // console.log(typeof data );
     
     for(const index of data ){
-       const sql = `INSERT INTO crypto.crypta (code, name, exchange, symbol, price, priceChange1h, priceChange1d, priceChange1w ) VALUES (
+       const sql = `INSERT INTO crypta (code, name, exchange, symbol, price, priceChange1h, priceChange1d, priceChange1w ) VALUES (
         "${index.id}", 
         "${index.name}",
         "coinpaprika",  
@@ -46,7 +48,7 @@ export const insertCoinPaprikaCryptoInDB = async() => {
     console.log("Coin Paprika here");
 }
 export const insertCuCryptoInDB = async() => {
-  const data: CucoinObject = await getCrypto('', '', 'cucoin').then(res => res)
+  const data: CucoinObject = await cryptoService.getCrypto('', '', 'cucoin').then(res => res)
   // console.log(typeof data );
   
   for(const index of data.data.ticker ){
@@ -69,11 +71,11 @@ export const insertCuCryptoInDB = async() => {
 }
 export const insertCoinMarketCryptoInDB = async() => {
   
-  const data: CoinMarketCapObject = await getCrypto('', '', 'coinmarketcap').then(res => res)
+  const data: CoinMarketCapObject = await cryptoService.getCrypto('', '', 'coinmarketcap').then(res => res)
   // console.log(typeof data );
   
   for(const index of data.data ){
-     const sql = `INSERT INTO crypto.crypta (code, name, exchange, symbol, price, priceChange1h, priceChange1d, priceChange1w ) VALUES (
+     const sql = `INSERT INTO crypta (code, name, exchange, symbol, price, priceChange1h, priceChange1d, priceChange1w ) VALUES (
       "${index.slug}", 
       "${index.name}", 
       "coinmarketcap", 

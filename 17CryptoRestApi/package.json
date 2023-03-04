@@ -2,9 +2,10 @@
   "name": "17cryptorestapi",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.js", 
   "scripts": {
     "start": "nodemon index.ts",
+    "dev": "tsc -w & nodemon .",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
