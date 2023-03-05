@@ -7,11 +7,26 @@ const token = '5891307863:AAHaiPlgVoTSKgsH6tLNGYdMlp8ppKKpEyY'
 const bot = new TelegramBot(token, {polling: true});
 const cryptpService = new CryptoService()
 
-bot.onText(/\/start/i, (msg) => {
+bot.onText(/\/start|main/i, (msg) => {
     const chatId = msg.chat.id;
-    bot.sendMessage(chatId,`Hello dear ${msg.chat.first_name}`, {
+    bot.sendMessage(chatId,`You're in the main menu, ${msg.chat.first_name}`, {
         "reply_markup": {
-            "keyboard" : [[{text: 'Top'}, ]] 
+            "keyboard" : [[{text: 'Top'}, {text: 'Help'}], [{text: 'List'}]] 
+        }
+    });
+    
+});
+bot.onText(/(?:^|\W)BTC|ETH|DOGE|BNB|USDT(?:$|\W)/g, async(msg) => {
+    const chatId = msg.chat.id;
+    const coin = msg.text?.substring(1) || '';
+    
+    const getData: Crypto[]  = await (cryptpService.getCryptoByName(coin))
+    const ans = [' NAME | SYMBOL | PRICE NOW | PRICE HOUR AGO \n', ...getData.map(coin => {
+        return `${coin.name}  ${coin.symbol} ${coin.Now} ${coin.hourAgo}`
+    })]
+    bot.sendMessage(chatId, ans.join('\n'), {
+        "reply_markup": {
+            "keyboard" : [[{text: 'Add'} ], [{text: "main"}]] 
         }
     });
     
@@ -21,6 +36,8 @@ bot.onText(/\/start/i, (msg) => {
 bot.on('message', async(msg: any) => {
     
     const chatId = msg.chat.id;
+    console.log(msg);
+    
     let cmd, crypta;
     msg.text.split(' ').length > 1? [cmd, crypta] = msg.text.split(' '): cmd = msg.text;
     if(cmd.toString().toLowerCase() === ('crypta' || 'crypto')){
@@ -55,8 +72,6 @@ bot.on('message', async(msg: any) => {
           USDT:  await (cryptpService.getCryptoByName('USDT')),
           BNB:  await (cryptpService.getCryptoByName('BNB')),
           DOGE:  await (cryptpService.getCryptoByName('DOGE')),
-        
-
         };
         let ans: Array<String> = [];
         for (const [key, value] of Object.entries(data)) {
@@ -75,3 +90,5 @@ bot.on('message', async(msg: any) => {
         bot.sendMessage(chatId,`Hello dear ${msg.chat.first_name}`);
     }
 });
+
+bot.sendMessage(376757358, 'як грубо')

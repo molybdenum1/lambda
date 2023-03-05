@@ -17,17 +17,32 @@ const crypto_service_1 = __importDefault(require("./service/crypto.service"));
 const token = '5891307863:AAHaiPlgVoTSKgsH6tLNGYdMlp8ppKKpEyY';
 const bot = new node_telegram_bot_api_1.default(token, { polling: true });
 const cryptpService = new crypto_service_1.default();
-bot.onText(/\/start/i, (msg) => {
+bot.onText(/\/start|main/i, (msg) => {
     const chatId = msg.chat.id;
-    bot.sendMessage(chatId, `Hello dear ${msg.chat.first_name}`, {
+    bot.sendMessage(chatId, `You're in the main menu, ${msg.chat.first_name}`, {
         "reply_markup": {
-            "keyboard": [[{ text: 'Top' },]]
+            "keyboard": [[{ text: 'Top' }, { text: 'Help' }], [{ text: 'List' }]]
         }
     });
 });
-bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
+bot.onText(/(?:^|\W)BTC|ETH|DOGE|BNB|USDT(?:$|\W)/g, (msg) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const chatId = msg.chat.id;
+    const coin = ((_a = msg.text) === null || _a === void 0 ? void 0 : _a.substring(1)) || '';
+    const getData = yield (cryptpService.getCryptoByName(coin));
+    const ans = [' NAME | SYMBOL | PRICE NOW | PRICE HOUR AGO \n', ...getData.map(coin => {
+            return `${coin.name}  ${coin.symbol} ${coin.Now} ${coin.hourAgo}`;
+        })];
+    bot.sendMessage(chatId, ans.join('\n'), {
+        "reply_markup": {
+            "keyboard": [[{ text: 'Add' }], [{ text: "main" }]]
+        }
+    });
+}));
+bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b, _c, _d;
+    const chatId = msg.chat.id;
+    console.log(msg);
     let cmd, crypta;
     msg.text.split(' ').length > 1 ? [cmd, crypta] = msg.text.split(' ') : cmd = msg.text;
     if (cmd.toString().toLowerCase() === ('crypta' || 'crypto')) {
@@ -42,7 +57,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
             bot.sendMessage(chatId, 'No such coin name or symbol');
         }
     }
-    if (((_a = msg.text) === null || _a === void 0 ? void 0 : _a.toString().toLowerCase()) === "bitoc") {
+    if (((_b = msg.text) === null || _b === void 0 ? void 0 : _b.toString().toLowerCase()) === "bitoc") {
         const chatId = msg.chat.id;
         const getData = yield (cryptpService.getCryptoByName('BTC'));
         const ans = getData.map(coin => {
@@ -51,7 +66,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
         bot.sendMessage(chatId, ans.join('\n'));
         // console.log(getData);
     }
-    if (((_b = msg.text) === null || _b === void 0 ? void 0 : _b.toString().toLowerCase()) === "top") {
+    if (((_c = msg.text) === null || _c === void 0 ? void 0 : _c.toString().toLowerCase()) === "top") {
         const chatId = msg.chat.id;
         const topCrypto = ['BTC', 'ETH', 'USDT', 'BNB', 'DOGE'];
         const data = {
@@ -72,7 +87,8 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
         bot.sendMessage(chatId, ans.join('\n'));
         // console.log(getData);
     }
-    if (((_c = msg.text) === null || _c === void 0 ? void 0 : _c.toString().toLowerCase()) === "hi") {
+    if (((_d = msg.text) === null || _d === void 0 ? void 0 : _d.toString().toLowerCase()) === "hi") {
         bot.sendMessage(chatId, `Hello dear ${msg.chat.first_name}`);
     }
 }));
+bot.sendMessage(376757358, 'як грубо');
