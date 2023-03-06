@@ -8,3 +8,7 @@ export interface Crypto {
     dayAgo: number;
     weekAgo: number;
 }
+export interface YourList {
+    id: number,
+    username: string,
+    coin: string}
