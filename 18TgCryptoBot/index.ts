@@ -1,11 +1,16 @@
 import TelegramBot from "node-telegram-bot-api";
 import CryptoService from "./service/crypto.service";
 import { Crypto } from "./src/intefaces/crypto.interface";
+import {Database} from "sqlite3";
+import shortid from "shortid";
 
 const token = '5891307863:AAHaiPlgVoTSKgsH6tLNGYdMlp8ppKKpEyY'
 
 const bot = new TelegramBot(token, {polling: true});
+const db = new Database('./db/user.db')
 const cryptpService = new CryptoService()
+
+let last_clicked_coin = '';
 
 bot.onText(/\/start|main/i, (msg) => {
     const chatId = msg.chat.id;
@@ -19,7 +24,8 @@ bot.onText(/\/start|main/i, (msg) => {
 bot.onText(/(?:^|\W)BTC|ETH|DOGE|BNB|USDT(?:$|\W)/g, async(msg) => {
     const chatId = msg.chat.id;
     const coin = msg.text?.substring(1) || '';
-    
+    last_clicked_coin = coin;
+
     const getData: Crypto[]  = await (cryptpService.getCryptoByName(coin))
     const ans = [' NAME | SYMBOL | PRICE NOW | PRICE HOUR AGO \n', ...getData.map(coin => {
         return `${coin.name}  ${coin.symbol} ${coin.Now} ${coin.hourAgo}`
@@ -36,11 +42,12 @@ bot.onText(/(?:^|\W)BTC|ETH|DOGE|BNB|USDT(?:$|\W)/g, async(msg) => {
 bot.on('message', async(msg: any) => {
     
     const chatId = msg.chat.id;
-    console.log(msg);
-    
     let cmd, crypta;
     msg.text.split(' ').length > 1? [cmd, crypta] = msg.text.split(' '): cmd = msg.text;
     if(cmd.toString().toLowerCase() === ('crypta' || 'crypto')){
+        console.log(crypta);
+        
+        last_clicked_coin = crypta;
         const getData: Crypto[]  = await (cryptpService.getCryptoByName(crypta))
         if(crypta){
             const ans = [' NAME | SYMBOL | PRICE NOW | PRICE HOUR AGO \n', ...getData.map(coin => {
@@ -55,6 +62,7 @@ bot.on('message', async(msg: any) => {
 
     if (msg.text?.toString().toLowerCase() === "bitoc") {
         const chatId = msg.chat.id;
+        last_clicked_coin = 'BTC';
         const getData: Crypto[]  = await (cryptpService.getCryptoByName('BTC'));
         const ans = getData.map(coin => {
            return `${coin.name}  ${coin.symbol} ${coin.Now} ${coin.hourAgo}`
@@ -86,9 +94,29 @@ bot.on('message', async(msg: any) => {
         bot.sendMessage(chatId, ans.join('\n') );
         // console.log(getData);
     } 
+    if(msg.text?.toString().toLowerCase() === "add") {
+        let sql = `INSERT INTO user VALUES (${msg.message_id},"${msg.chat.username}", ${msg.chat.id})`;
+        db.run(sql, ['C'], (err) => {
+            if(err) console.log(err.message);
+            console.log('A row has been inserted in user table.');
+        })
+        // sql = `INSERT INTO crypto_list VALUES (${msg.message_id},${msg.message_id}, "${last_clicked_coin}")`
+        // db.run(sql, ['C'], (err) => {
+        //     if(err) console.log(err.message);
+        //     console.log('A row has been inserted in crypto_list table.');
+        // })
+        bot.sendMessage(chatId,`Added in yout list of fav`);
+    }
+
     if (msg.text?.toString().toLowerCase() === "hi") {
         bot.sendMessage(chatId,`Hello dear ${msg.chat.first_name}`);
+        // db.all('SELECT * FROM user', [], (err, rows) => {
+        //     if(err) throw err;
+        //     rows.forEach(row => console.log(row))
+        // })
+        console.log(last_clicked_coin);
+        
     }
 });
 
-bot.sendMessage(376757358, 'як грубо')
+// bot.sendMessage(376757358, 'як грубо')
