@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@tsconfig/node16": "^1.0.3",
+    "tsc": "^2.0.4"
+  }
+}
