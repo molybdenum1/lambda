@@ -2,5 +2,19 @@
   "dependencies": {
     "@tsconfig/node16": "^1.0.3",
     "tsc": "^2.0.4"
-  }
+  },
+  "name": "20arraycustom",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "start": "tsc & node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
