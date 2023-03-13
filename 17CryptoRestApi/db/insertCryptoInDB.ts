@@ -1,9 +1,9 @@
-import { CoinMarketCapObject } from './data/coinmarketcap';
-import { CoinPaprikaObject } from './data/coinpaprika';
-import { CoinStatsObject } from './data/coinstats';
-import { CucoinObject } from './data/cucoin';
-import { conn } from './db';
-import CryptoService from './service/crypto.service';
+import { CoinMarketCapObject } from '../data/coinmarketcap';
+import { CoinPaprikaObject } from '../data/coinpaprika';
+import { CoinStatsObject } from '../data/coinstats';
+import { CucoinObject } from '../data/cucoin';
+import { conn } from '.';
+import CryptoService from '../service/crypto.service';
 
 const cryptoService = new CryptoService();
 

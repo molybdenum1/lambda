@@ -4,7 +4,7 @@ import {
   insertCoinPaprikaCryptoInDB,
   insertCoinStatsCryptoInDB,
   insertCuCryptoInDB,
-} from "../insertCryptoInDB";
+} from "./insertCryptoInDB";
 
 export const conn = mysql.createConnection({
   // host: "us-cdbr-east-06.cleardb.net",
