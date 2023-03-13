@@ -14,15 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_telegram_bot_api_1 = __importDefault(require("node-telegram-bot-api"));
 const crypto_service_1 = __importDefault(require("./service/crypto.service"));
-const sqlite3_1 = require("sqlite3");
-const token = '5891307863:AAHaiPlgVoTSKgsH6tLNGYdMlp8ppKKpEyY';
+const index_1 = require("./db/scripts/index");
+const config_1 = require("./src/config");
+const token = config_1.config.botToken;
 const bot = new node_telegram_bot_api_1.default(token, { polling: true });
-const db = new sqlite3_1.Database('./db/user.db', (err) => {
-    if (err) {
-        return console.error(err.message);
-    }
-    console.log('Connected to the SQlite database.');
-});
 const cryptpService = new crypto_service_1.default();
 let last_clicked_coin = '';
 bot.onText(/\/start|main/i, (msg) => {
@@ -39,8 +34,8 @@ bot.onText(/(?:^|\W)BTC|ETH|DOGE|BNB|USDT(?:$|\W)/g, (msg) => __awaiter(void 0, 
     const coin = ((_a = msg.text) === null || _a === void 0 ? void 0 : _a.substring(1)) || '';
     last_clicked_coin = coin;
     const getData = yield (cryptpService.getCryptoByName(coin));
-    const ans = [' NAME | SYMBOL | PRICE NOW | PRICE HOUR AGO \n', ...getData.map(coin => {
-            return `${coin.name}  ${coin.symbol} ${coin.Now} ${coin.hourAgo}`;
+    const ans = [' NAME | SYMBOL | PRICE NOW | CHANGE FOR LAST HOUR \n', ...getData.map(coin => {
+            return `${coin.name}  ${coin.symbol} ${coin.Now.toFixed(3)} ${coin.hourAgo.toFixed(2)}%`;
         })];
     bot.sendMessage(chatId, ans.join('\n'), {
         "reply_markup": {
@@ -59,7 +54,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
         const getData = yield (cryptpService.getCryptoByName(crypta));
         if (crypta) {
             const ans = [' NAME | SYMBOL | PRICE NOW | PRICE HOUR AGO \n', ...getData.map(coin => {
-                    return `${coin.name}  ${coin.symbol} ${coin.Now} ${coin.hourAgo}`;
+                    return `${coin.name}  ${coin.symbol} ${coin.Now} ${coin.hourAgo.toFixed(2)}%`;
                 })];
             bot.sendMessage(chatId, ans.join('\n'));
         }
@@ -72,7 +67,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
         last_clicked_coin = 'BTC';
         const getData = yield (cryptpService.getCryptoByName('BTC'));
         const ans = getData.map(coin => {
-            return `${coin.name}  ${coin.symbol} ${coin.Now} ${coin.hourAgo}`;
+            return `${coin.name}  ${coin.symbol} ${coin.Now} ${coin.hourAgo.toFixed(2)}%`;
         });
         bot.sendMessage(chatId, ans.join('\n'));
         // console.log(getData);
@@ -91,7 +86,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
         for (const [key, value] of Object.entries(data)) {
             ans = [...ans, ans ? `\n  /${key} \n` : `\n  ${key} \n`];
             let a = value.map(coin => {
-                return `${coin.exchange} : ${coin.name}  ${coin.symbol} ${coin.Now} ${coin.hourAgo}`;
+                return `${coin.exchange} : \n  ${coin.name}  ${coin.symbol} ${coin.Now.toFixed(3)} ${coin.hourAgo.toFixed(2)}%`;
             });
             ans = [...ans, ...a];
         }
@@ -100,13 +95,13 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
     if (((_d = msg.text) === null || _d === void 0 ? void 0 : _d.toString().toLowerCase()) === "add") {
         if (last_clicked_coin) {
-            let select = yield getDataFromDb(`SELECT * from user 
+            let select = yield (0, index_1.getDataFromDb)(`SELECT * from user 
             WHERE username='${msg.chat.username}' AND coin='${last_clicked_coin}'`);
             if (!select.length) {
                 let sql = `INSERT INTO user(username, chat_id, coin) VALUES 
                 ("${msg.chat.username}",${msg.chat.id}, "${last_clicked_coin}")`;
                 // console.log(sql);
-                db.all(sql, [], (err) => {
+                index_1.db.all(sql, [], (err) => {
                     if (err)
                         console.log(err.message);
                     // rows.forEach((row:any) => console.log(row))
@@ -125,12 +120,12 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
     if (((_e = msg.text) === null || _e === void 0 ? void 0 : _e.toString().toLowerCase()) === "delete") {
         if (last_clicked_coin) {
-            let select = yield getDataFromDb(`SELECT * from user 
+            let select = yield (0, index_1.getDataFromDb)(`SELECT * from user 
             WHERE username='${msg.chat.username}' AND coin='${last_clicked_coin}'`);
             if (select.length) {
                 let sql = `DELETE FROM user where username='${msg.chat.username}' AND coin='${last_clicked_coin}';`;
                 console.log(sql);
-                db.all(sql, [], (err) => {
+                index_1.db.all(sql, [], (err) => {
                     if (err)
                         console.log(err.message);
                     // rows.forEach((row:any) => console.log(row))
@@ -149,7 +144,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
     if (((_f = msg.text) === null || _f === void 0 ? void 0 : _f.toString().toLowerCase()) === "list") {
         let sql = `SELECT * FROM user WHERE username = '${msg.chat.username}'`;
-        const data = yield getDataFromDb(sql);
+        const data = yield (0, index_1.getDataFromDb)(sql);
         if (data.length) {
             let ans = ['Your list of favourites coins', ...data.map(str => ' /' + str.coin)];
             bot.sendMessage(chatId, ans.join('\n'));
@@ -176,15 +171,4 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(last_clicked_coin);
     }
 }));
-const getDataFromDb = (sql) => {
-    return new Promise((resolve, reject) => {
-        db.serialize(() => {
-            db.all(sql, [], (err, rows) => {
-                if (err)
-                    reject(err);
-                resolve(rows);
-            });
-        });
-    });
-};
 // bot.sendMessage(376757358, 'як грубо')

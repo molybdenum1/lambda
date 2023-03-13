@@ -6,8 +6,9 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc && node ./dist/index.js",
-    "dev": "tsc && nodemon ./dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev":   "tsc && nodemon ./dist/index.js",
+    "lint":  "eslint . --ext .ts",
+    "test":  "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
