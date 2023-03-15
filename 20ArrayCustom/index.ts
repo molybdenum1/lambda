@@ -1,4 +1,4 @@
-// **associateBy**
+// **associateBy** +
 // average +
 // chunked
 // distinctBy
@@ -17,7 +17,9 @@
 
 interface Array<T> {
   multiply(facto: number): T[];
+  associateBy<K>(keySelector: (value: T) => K): Map<K, T>;
   average(): number;
+  chuncked(size: number): T[][];
   myFilter(condition: (num: number) => boolean): T[];
   filterIndexed(predicate: (index: number, value: T) => boolean): T[];
   filterNot(predicate: (value: T) => boolean): T[];
@@ -40,6 +42,32 @@ Array.prototype.multiply = function (factor = 2): number[] {
 Array.prototype.average = function (): number {
   return this.reduce((a, b) => a + b, 0) / this.length;
 };
+
+Array.prototype.associateBy = function(keySelector){
+  const map = new Map();
+  for(const el of this){
+    const key = keySelector(el);
+    map.set(key, el);
+  }
+  return map;
+}
+
+Array.prototype.chuncked = function(size){
+  const result = [];
+  let chunk = [];
+  for (let i = 0; i < this.length; i++) {
+    chunk.push(this[i]);
+    if (chunk.length === size) {
+      result.push(chunk);
+      chunk = [];
+    }
+  }
+
+  if (chunk.length > 0) {
+    result.push(chunk);
+  }
+  return result;
+}
 
 Array.prototype.myFilter = function (condition) {
   const filteredArray = [];
@@ -135,6 +163,36 @@ console.log("LastEl : " + arr.findLast((num) => num % 2 === 0));
 console.log("Flatten : " + [1,2,[2, [33,1], 2], 9].flatten());
 
 console.log("Count: " + arr.count((num) => num % 2 === 0));
+console.log(arr.chuncked(2));
+
 console.log(
   "Fold: " + arr.fold(1, (accumulator, element) => accumulator * element)
 );
+console.log('+++++++++++++++++');
+interface Person {
+  name: string;
+  age: number;
+}
+
+const people: Person[] = [
+  { name: "Alice", age: 25 },
+  { name: "Alice", age: 24 },
+  { name: "Bob", age: 30 },
+  { name: "Bobi", age: 25 },
+  { name: "Charlie", age: 26 },
+  { name: "Dame", age: 22 },
+  { name: "Edward", age: 26 },
+  { name: "Franklin", age: 26 },
+  { name: "Gerald", age: 28 },
+  { name: "Harry", age: 21 },
+
+];
+
+const peopleByName = people.associateBy((person) => person.name);
+console.log(peopleByName);
+
+const peopleByAge = people.associateBy((person) => person.age);
+// console.log(peopleByAge);
+console.log('++++++++++++++++++++++++++');
+
+
