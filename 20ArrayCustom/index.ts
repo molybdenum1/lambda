@@ -1,25 +1,25 @@
 // **associateBy** +
 // average +
-// chunked
+// chunked +
 // distinctBy
 // filter +
 // filterIndexed +
 // filterNot +
 // find +
 // findLast +
-// flatten + 
+// flatten +
 // fold +
 // maxBy
 // minBy
 // count + (с селектором — у нас есть массив обьектов, внутри обьекта ключ, например, population).
 // И мы хотим посчитать общее население по всем обьектам. (аналог countBy).
-// groupBy - оба
+// groupBy - оба +-
 
 interface Array<T> {
   multiply(facto: number): T[];
   associateBy<K>(keySelector: (value: T) => K): Map<K, T>;
   average(): number;
-  chuncked(size: number): T[][];
+  chunked(size: number): T[][];
   myFilter(condition: (num: number) => boolean): T[];
   filterIndexed(predicate: (index: number, value: T) => boolean): T[];
   filterNot(predicate: (value: T) => boolean): T[];
@@ -28,6 +28,7 @@ interface Array<T> {
   fold<U>(initialValue: U, operation: (accumulator: U, element: T) => U): U;
   flatten(): Array<T>;
   count(predicate: (value: T, index: number, array: T[]) => boolean): number;
+  groupBy<T, K>(keySelector: (element: T) => K): Map<K, T[]>;
 }
 
 Array.prototype.multiply = function (factor = 2): number[] {
@@ -43,16 +44,16 @@ Array.prototype.average = function (): number {
   return this.reduce((a, b) => a + b, 0) / this.length;
 };
 
-Array.prototype.associateBy = function(keySelector){
+Array.prototype.associateBy = function (keySelector) {
   const map = new Map();
-  for(const el of this){
+  for (const el of this) {
     const key = keySelector(el);
     map.set(key, el);
   }
   return map;
-}
+};
 
-Array.prototype.chuncked = function(size){
+Array.prototype.chunked = function (size) {
   const result = [];
   let chunk = [];
   for (let i = 0; i < this.length; i++) {
@@ -67,7 +68,7 @@ Array.prototype.chuncked = function(size){
     result.push(chunk);
   }
   return result;
-}
+};
 
 Array.prototype.myFilter = function (condition) {
   const filteredArray = [];
@@ -124,7 +125,7 @@ Array.prototype.flatten = function (): any {
       flattenedArray.push(element);
     }
   }
-  return flattenedArray.sort((a,b) => a - b);
+  return flattenedArray.sort((a, b) => a - b);
 };
 
 Array.prototype.count = function (predicate) {
@@ -147,6 +148,18 @@ Array.prototype.fold = function <T, U>(
   return accumulator;
 };
 
+Array.prototype.groupBy = function (keySelector) {
+  const map = new Map();
+  for (const element of this) {
+    const key = keySelector(element);
+    if (!map.has(key)) {
+      map.set(key, []);
+    }
+    map.get(key)?.push(element);
+  }
+  return map;
+};
+
 const arr: number[] = [1, 2, 3, 4, 5];
 console.log("Array by default " + arr);
 console.log("Multiply: " + arr.multiply(3));
@@ -160,15 +173,15 @@ console.log(
 console.log("Not Filter: " + arr.filterNot((num) => num % 2 === 0));
 console.log("FirstEl : " + arr.findFirst((num) => num % 2 === 0));
 console.log("LastEl : " + arr.findLast((num) => num % 2 === 0));
-console.log("Flatten : " + [1,2,[2, [33,1], 2], 9].flatten());
+console.log("Flatten : " + [1, 2, [2, [33, 1], 2], 9].flatten());
 
 console.log("Count: " + arr.count((num) => num % 2 === 0));
-console.log(arr.chuncked(2));
+console.log(arr.chunked(2));
 
 console.log(
   "Fold: " + arr.fold(1, (accumulator, element) => accumulator * element)
 );
-console.log('+++++++++++++++++');
+console.log("+++++++++++++++++");
 interface Person {
   name: string;
   age: number;
@@ -185,7 +198,6 @@ const people: Person[] = [
   { name: "Franklin", age: 26 },
   { name: "Gerald", age: 28 },
   { name: "Harry", age: 21 },
-
 ];
 
 const peopleByName = people.associateBy((person) => person.name);
@@ -193,6 +205,12 @@ console.log(peopleByName);
 
 const peopleByAge = people.associateBy((person) => person.age);
 // console.log(peopleByAge);
-console.log('++++++++++++++++++++++++++');
+console.log("++++++++++++++++++++++++++");
 
-
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const parityGroups = numbers.groupBy((n: number) =>
+  n % 2 === 0 ? "even" : "odd"
+);
+const ageGroups = people.groupBy((person: Person) => person.age);
+console.log(parityGroups);
+console.log(ageGroups);
