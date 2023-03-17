@@ -27,6 +27,8 @@ interface Array<T> {
   findLast(predicate: (value: T) => boolean): T | null;
   fold<U>(initialValue: U, operation: (accumulator: U, element: T) => U): U;
   flatten(): Array<T>;
+  maxBy(fn: (i: T) => number) :T | undefined;
+  minBy(fn: (i: T) => number): T | undefined;
   count(predicate: (value: T, index: number, array: T[]) => boolean): number;
   groupBy<T, K>(keySelector: (element: T) => K): Map<K, T[]>;
 }
@@ -115,7 +117,7 @@ Array.prototype.findLast = function (predicate): number | null {
   return null;
 };
 
-Array.prototype.flatten = function (): any {
+Array.prototype.flatten = function(): any[] {
   let flattenedArray = [];
   for (let i = 0; i < this.length; i++) {
     const element = this[i];
@@ -127,6 +129,48 @@ Array.prototype.flatten = function (): any {
   }
   return flattenedArray.sort((a, b) => a - b);
 };
+
+Array.prototype.maxBy = function(fn){
+  if (this.length === 0) {
+    return undefined;
+  }
+
+  let maxElement = this[0];
+  let maxValue = fn(maxElement);
+
+  for (let i = 1; i < this.length; i++) {
+    const element = this[i];
+    const value = fn(element);
+
+    if (value > maxValue) {
+      maxElement = element;
+      maxValue = value;
+    }
+  }
+
+  return maxElement;
+}
+
+Array.prototype.minBy = function(fn) {
+   if (this.length === 0) {
+    return undefined;
+  }
+
+  let minElement = this[0];
+  let minValue = fn(minElement);
+
+  for (let i = 1; i < this.length; i++) {
+    const element = this[i];
+    const value = fn(element);
+
+    if (value < minValue) {
+      minElement = element;
+      minValue = value;
+    }
+  }
+
+  return minElement;
+}
 
 Array.prototype.count = function (predicate) {
   return this.reduce((counter, value, index, array) => {
@@ -174,6 +218,8 @@ console.log("Not Filter: " + arr.filterNot((num) => num % 2 === 0));
 console.log("FirstEl : " + arr.findFirst((num) => num % 2 === 0));
 console.log("LastEl : " + arr.findLast((num) => num % 2 === 0));
 console.log("Flatten : " + [1, 2, [2, [33, 1], 2], 9].flatten());
+console.log("MaxBy : " + arr.maxBy((num) => num  * num));
+console.log("MinBy : " + arr.minBy((num) => num  * num));
 
 console.log("Count: " + arr.count((num) => num % 2 === 0));
 console.log(arr.chunked(2));
